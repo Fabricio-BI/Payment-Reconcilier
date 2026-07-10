@@ -46,11 +46,14 @@ Este desfase entre lo que registra el ERP ($500) y lo que deposita el banco ($45
 
 ---
 
-## Las tres novedades que el sistema detecta
+## Las tres novedades que el script detecta
 
 De un total de 3.000 transacciones analizadas en el período julio-diciembre 2024, el sistema identificó 99 casos que requieren atención:
 
 ```
+
+![Resultado Conciliador](Consola%20reconciliador.JPG)
+
 Transacciones conciliadas correctamente  →  2.901  (96.7%)
 Comisiones cobradas de más               →     45  casos
 Chargebacks no registrados en ERP        →     24  casos
@@ -142,7 +145,7 @@ Con esa información el contador:
 
 ---
 
-## El valor que aporta el sistema
+## El valor que aporta el proyecto
 
 Antes de este sistema, un equipo contable dedicaba entre 8 y 20 horas semanales a cruzar manualmente los reportes del banco, la pasarela y el ERP. Aun así, errores como las comisiones cobradas de más o los chargebacks no registrados pasaban desapercibidos porque el volumen de transacciones hace imposible revisar cada línea con atención.
 

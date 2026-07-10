@@ -52,7 +52,7 @@ De un total de 3.000 transacciones analizadas en el período julio-diciembre 202
 
 ```
 
-![Resultado Conciliador](Consola%20reconciliador.JPG)
+![Resultado Conciliador](Consola reconciliador.JPG)
 
 Transacciones conciliadas correctamente  →  2.901  (96.7%)
 Comisiones cobradas de más               →     45  casos

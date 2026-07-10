@@ -31,7 +31,50 @@ El problema es que estos tres sistemas no se comunican entre sí de forma autom�
 
 ## Pipeline del Proyecto
 
-![Pipeline del Proyecto](images/Pipeline_proyecto.JPG)
+```mermaid
+flowchart TD
+    subgraph FUENTES["Fuentes de datos — data/raw/"]
+        A["bank_report.csv\nReporte de liquidación bancaria"]
+        B["gateway_report.csv\nDatafast · Medianet · PayPhone"]
+        C["erp_invoices.csv\nFacturas del sistema contable"]
+    end
+
+    subgraph ETL["Procesamiento ETL — src/"]
+        D["etl.py\nLimpieza y normalización\nRetenciones SRI · Comisiones"]
+        E["reconciler.py\nAlgoritmo de cruce\nClasificación de novedades"]
+        F["loader.py\nCarga a base de datos\nControl de períodos"]
+    end
+
+    subgraph DB["Base de datos — data/processed/"]
+        G[("conciliador.db\nSQLite")]
+        H["reconciliation_output.csv\n3.000 transacciones clasificadas"]
+        I["duplicados_gateway.csv\n60 duplicados detectados"]
+    end
+
+    subgraph DASHBOARD["Dashboard Criterio — pbi_report/"]
+        J["Criterio.pbix\nResumen Ejecutivo · Partidas Abiertas · Análisis de Comisiones"]
+    end
+
+    subgraph RESULTADO["Novedades detectadas"]
+        K["45 comisiones cobradas de más\n$100.70 recuperables"]
+        L["24 chargebacks no registrados en ERP\n$5,060.69 en riesgo"]
+        M["30 transacciones sin confirmar en pasarela\n$12,872.18 sin trazabilidad"]
+    end
+
+    A --> D
+    B --> D
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    F --> H
+    F --> I
+    G --> J
+    H --> J
+    J --> K
+    J --> L
+    J --> M
+```
 
 
 

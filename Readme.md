@@ -111,7 +111,7 @@ CONCILACION PASARELA/
 Esta sección presenta las pantallas principales del tablero diseñado en Power BI, el cual automatiza el monitoreo y control del pipeline de conciliación.
 
 ### 1. Resumen Ejecutivo
-Vista general que consolida los principales indicadores financieros (KPIs), montos totales procesados, volumen de transacciones conciliadas y alertas tempranas sobre diferencias detectadas entre las fuentes.
+Vista general que consolida los principales indicadores , montos totales procesados, volumen de transacciones conciliadas y alertas tempranas sobre diferencias detectadas entre las fuentes.
 
 ![Resumen Ejecutivo](images/pbi_page_1.JPG)
 
@@ -124,8 +124,8 @@ Panel detallado para el equipo contable enfocado en la investigación de novedad
 
 ---
 
-### 3. Detalle Operativo
-Métricas adicionales de rendimiento y conciliación diaria por tipo de canal o franquicia.
+### 3. Analisis de Comisiones
+Montos por recuperar de comsiones cobradas de mas 
 
 ![Resumen Ejecutivo 1](images/pbi_page_2.JPG)
 

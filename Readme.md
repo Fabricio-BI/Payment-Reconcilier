@@ -14,6 +14,97 @@ Cuando una empresa recibe pagos con tarjeta de crédito, intervienen tres sistem
 El problema es que estos tres sistemas no se comunican entre sí de forma automática. El equipo contable tiene que cruzar manualmente los reportes de los tres — un proceso que con volúmenes medianos puede tomar entre 8 y 20 horas semanales y que, inevitablemente, genera errores humanos.
 
 ---
+ 
+## Stack tecnológico
+ 
+| Capa | Tecnología | Uso |
+|---|---|---|
+| Procesamiento | Python · Pandas · NumPy | ETL, algoritmo de cruce, detección de novedades |
+| Almacenamiento | SQLite · SQLAlchemy | Almacenamiento de resultados con histórico por período |
+| Visualización | Power BI  | Dashboard ejecutivo · Partidas abiertas · Análisis de comisiones |
+| Generación de datos | Faker | Datos sintéticos con errores reales inyectados |
+ 
+
+
+
+---
+
+## Pipeline del Proyecto
+
+```mermaid
+flowchart TD
+    subgraph FUENTES["Fuentes de datos — data/raw/"]
+        A["bank_report.csv\nReporte de liquidación bancaria"]
+        B["gateway_report.csv\nDatafast · Medianet · PayPhone"]
+        C["erp_invoices.csv\nFacturas del sistema contable"]
+    end
+
+    subgraph ETL["Procesamiento ETL — src/"]
+        D["etl.py\nLimpieza y normalización\nRetenciones SRI · Comisiones"]
+        E["reconciler.py\nAlgoritmo de cruce\nClasificación de novedades"]
+        F["loader.py\nCarga a base de datos\nControl de períodos"]
+    end
+
+    subgraph DB["Base de datos — data/processed/"]
+        G[("conciliador.db\nSQLite")]
+        H["reconciliation_output.csv\n3.000 transacciones clasificadas"]
+        I["duplicados_gateway.csv\n60 duplicados detectados"]
+    end
+
+    subgraph DASHBOARD["Dashboard  — pbi_report/"]
+        J["Criterio.pbix\nResumen Ejecutivo · Partidas Abiertas · Análisis de Comisiones"]
+    end
+
+    subgraph RESULTADO["Novedades detectadas"]
+        K["45 comisiones cobradas de más\n$100.70 recuperables"]
+        L["24 chargebacks no registrados en ERP\n$5,060.69 en riesgo"]
+        M["30 transacciones sin confirmar en pasarela\n$12,872.18 sin trazabilidad"]
+    end
+
+    A --> D
+    B --> D
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    F --> H
+    F --> I
+    G --> J
+    H --> J
+    J --> K
+    J --> L
+    J --> M
+```
+
+--
+
+## Estructura del repositorio
+ 
+```
+CONCILACION PASARELA/
+│
+├── Readme.md
+├── .gitignore
+├── Consola reconciliador.JPG
+│
+├── data/
+│   └── (Archivos de entrada y datos de la conciliación)
+│
+├── src/
+│   ├── etl.py
+│   ├── loader.py
+│   └── reconciler.py
+│
+└── pbi_report/
+    ├── Reconciliador_Informe.pbix
+    └── ux_templates/
+        ├── Partidas Abiertas.png
+        ├── Resumen Ejecutivo 1.png
+        └── Resumen Ejecutivo.png
+```
+
+
+--
 
 ## Cómo fluye el dinero — la base para entender las novedades
 
@@ -152,3 +243,19 @@ Con el sistema ese trabajo toma menos de un minuto. El pipeline automatizado lee
 
 El impacto más concreto en el período analizado: $100.70 en comisiones recuperables que sin el sistema nadie hubiera reclamado, y $5,060.69 en ingresos ficticios que hubieran cerrado el período en los libros contables sin ser detectados.
 
+## Notas para producción
+ 
+```
+- Base de datos: SQLite para desarrollo. Cambiar a PostgreSQL modificando
+  una línea en loader.py para entornos de producción.
+ 
+- Histórico: el loader usa append con control de períodos. Ejecutar
+  una vez por mes para acumular histórico en Power BI.
+ 
+- Aging: calculado con la fecha máxima del dataset. En producción con
+  datos del mes actual, cambiar a DateTime.LocalNow() en Power BI.
+ 
+- client_name en chargebacks: pendiente de implementar lookup al ERP
+  por tx_id para recuperar el nombre del cliente en reversiones.
+```
+ *Desarrollado por Fabricio Coque · Guayaquil, Ecuador*

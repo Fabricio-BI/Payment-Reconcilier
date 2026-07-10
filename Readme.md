@@ -50,10 +50,9 @@ Este desfase entre lo que registra el ERP ($500) y lo que deposita el banco ($45
 
 De un total de 3.000 transacciones analizadas en el período julio-diciembre 2024, el sistema identificó 99 casos que requieren atención:
 
-```
-
 ![Resultado Conciliador](Consola reconciliador.JPG)
 
+```
 Transacciones conciliadas correctamente  →  2.901  (96.7%)
 Comisiones cobradas de más               →     45  casos
 Chargebacks no registrados en ERP        →     24  casos

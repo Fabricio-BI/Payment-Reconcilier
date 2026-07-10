@@ -51,8 +51,8 @@ flowchart TD
         I["duplicados_gateway.csv\n60 duplicados detectados"]
     end
 
-    subgraph DASHBOARD["Dashboard Criterio — pbi_report/"]
-        J["Criterio.pbix\nResumen Ejecutivo · Partidas Abiertas · Análisis de Comisiones"]
+    subgraph DASHBOARD["Dashboard  — pbi_report/"]
+        J["Reconcliador_informe.pbix\nResumen Ejecutivo · Partidas Abiertas · Análisis de Comisiones"]
     end
 
     subgraph RESULTADO["Novedades detectadas"]
@@ -106,6 +106,30 @@ CONCILACION PASARELA/
 
 
 --
+## Dashboard de Power BI - Reporte de Conciliación
+
+Esta sección presenta las pantallas principales del tablero diseñado en Power BI, el cual automatiza el monitoreo y control del pipeline de conciliación.
+
+### 1. Resumen Ejecutivo
+Vista general que consolida los principales indicadores financieros (KPIs), montos totales procesados, volumen de transacciones conciliadas y alertas tempranas sobre diferencias detectadas entre las fuentes.
+
+![Resumen Ejecutivo](images/pbi_page_1.JPG)
+
+---
+
+### 2. Análisis de Partidas Abiertas
+Panel detallado para el equipo contable enfocado en la investigación de novedades. Permite identificar rápidamente transacciones duplicadas, registros huérfanos o comisiones mal calculadas por la pasarela de pagos.
+
+![Partidas Abiertas](images/pbi_page_2.JPG)
+
+---
+
+### 3. Detalle Operativo
+Métricas adicionales de rendimiento y conciliación diaria por tipo de canal o franquicia.
+
+![Resumen Ejecutivo 1](images/pbi_page_2.JPG)
+
+
 
 ## Cómo fluye el dinero — la base para entender las novedades
 

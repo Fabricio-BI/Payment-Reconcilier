@@ -20,7 +20,7 @@ def cruzar_banco_erp(bank: pd.DataFrame, erp: pd.DataFrame) -> pd.DataFrame:
         "card_type", "monto_bruto", "comision_banco",
         "ret_iva_banco", "ret_renta_banco", "monto_neto_banco",
         "comision_esperada", "neto_esperado_banco",
-        "estado_banco", "es_chargeback"
+        "estado_banco", "es_chargeback", "original_transaction_id"
     ]].copy()
 
     erp_slim = erp[[
@@ -35,6 +35,26 @@ def cruzar_banco_erp(bank: pd.DataFrame, erp: pd.DataFrame) -> pd.DataFrame:
 
     df["en_banco"] = df["monto_bruto"].notna().astype(int)
     df["en_erp"]   = df["monto_bruto_erp"].notna().astype(int)
+
+    # ── FIX: recuperar client_name y monto_bruto_erp para chargebacks ────────
+    # Las filas de reversión (chargeback) no generaron factura propia — son
+    # una reversión de la venta original. original_transaction_id guarda el
+    # tx_id de esa venta, así que buscamos sus datos directamente en erp.
+    erp_lookup = erp[["tx_id", "client_name", "monto_bruto_erp"]].rename(
+        columns={
+            "tx_id": "original_transaction_id",
+            "client_name": "client_name_original",
+            "monto_bruto_erp": "monto_bruto_erp_original",
+        }
+    )
+
+    df = df.merge(erp_lookup, on="original_transaction_id", how="left")
+
+    df["client_name"] = df["client_name"].fillna(df["client_name_original"])
+    df["monto_bruto_erp"] = df["monto_bruto_erp"].fillna(df["monto_bruto_erp_original"])
+
+    df = df.drop(columns=["client_name_original", "monto_bruto_erp_original"])
+    # ───────────────────────────────────────────────────────────────────────
 
     # Comparación de flujos netos para evaluar descuadres iniciales
     df["diff_banco_erp"] = (

@@ -120,7 +120,7 @@ Esta sección presenta las pantallas principales del tablero diseñado en Power 
 
 Vista general que consolida los principales indicadores: montos totales procesados, volumen de transacciones conciliadas y alertas tempranas sobre diferencias detectadas entre las fuentes.
 
-![Resumen Ejecutivo](pbi_report\ux_templates\Resumen Ejecutivo.png)
+![Resumen Ejecutivo](images/pbi_page_1.JPG)
 
 
 ---
@@ -129,7 +129,7 @@ Vista general que consolida los principales indicadores: montos totales procesad
 
 Panel detallado para el equipo contable enfocado en la investigación de novedades. Permite identificar rápidamente transacciones duplicadas, registros huérfanos o comisiones mal calculadas por la pasarela de pagos.
 
-![Partidas Abiertas](pbi_report/ux_templates/Partidas Abiertas.png)
+![Partidas Abiertas](images/pbi_page_2.JPG)
 
 ---
 
@@ -137,7 +137,7 @@ Panel detallado para el equipo contable enfocado en la investigación de novedad
 
 Montos por recuperar de comisiones cobradas de más, comparadas contra la tasa contractual de cada pasarela.
 
-![Análisis de Comisiones](pbi_report/ux_templates/Partidas Abiertas.png)
+![Análisis de Comisiones](images/pbi_page_2.JPG))
 
 ---
 

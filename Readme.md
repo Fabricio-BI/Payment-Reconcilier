@@ -1,8 +1,3 @@
-*This project is documented in Spanish, targeting the Ecuadorian financial and accounting market. English summary below.*
-
-> **English summary:** This project automates the reconciliation of card-payment transactions across three sources that never match automatically — the bank settlement report, the payment gateway report (Datafast, Medianet, PayPhone), and the accounting ERP. Built with Python (Pandas), SQLite and Power BI. The pipeline detects overcharged commissions, unregistered chargebacks and untraceable transactions — surfacing $100.70 in recoverable overcharges and $5,060.69 in phantom revenue still sitting in the books, out of 3,024 synthetic but realistically modeled transactions.
-
----
 
 # Conciliador de Pasarelas de Pago
 ## Qué detecta, por qué importa y cómo actuar
@@ -125,7 +120,7 @@ Esta sección presenta las pantallas principales del tablero diseñado en Power 
 
 Vista general que consolida los principales indicadores: montos totales procesados, volumen de transacciones conciliadas y alertas tempranas sobre diferencias detectadas entre las fuentes.
 
-![Resumen Ejecutivo](pbi_report/ux_templates/pbi_page_1.JPG)
+![Resumen Ejecutivo](pbi_report/ux_templates/Resumen Ejecutivo.png)
 
 ---
 
@@ -133,7 +128,7 @@ Vista general que consolida los principales indicadores: montos totales procesad
 
 Panel detallado para el equipo contable enfocado en la investigación de novedades. Permite identificar rápidamente transacciones duplicadas, registros huérfanos o comisiones mal calculadas por la pasarela de pagos.
 
-![Partidas Abiertas](pbi_report/ux_templates/pbi_page_2.JPG)
+![Partidas Abiertas](pbi_report/ux_templates/Partidas Abiertas.png)
 
 ---
 
@@ -141,7 +136,7 @@ Panel detallado para el equipo contable enfocado en la investigación de novedad
 
 Montos por recuperar de comisiones cobradas de más, comparadas contra la tasa contractual de cada pasarela.
 
-![Análisis de Comisiones](pbi_report/ux_templates/pbi_page_3.JPG)
+![Análisis de Comisiones](pbi_report/ux_templates/Partidas Abiertas.png)
 
 ---
 
@@ -180,7 +175,7 @@ Este desfase entre lo que registra el ERP ($500) y lo que deposita el banco ($45
 
 De un total de 3.024 transacciones analizadas en el período julio-diciembre 2024 (3.000 ventas originales + 24 reversiones posteriores), el sistema identificó 99 casos que requieren atención:
 
-![Resultado Conciliador](Consola%20reconciliador.JPG)
+![Resultado Conciliador](images/consola_pasarela.JPG)
 
 ```
 Transacciones conciliadas correctamente  →  2.925  (96.7%)

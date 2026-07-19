@@ -1,3 +1,9 @@
+*This project is documented in Spanish, targeting the Ecuadorian financial and accounting market. English summary below.*
+
+> **English summary:** This project automates the reconciliation of card-payment transactions across three sources that never match automatically — the bank settlement report, the payment gateway report (Datafast, Medianet, PayPhone), and the accounting ERP. Built with Python (Pandas), SQLite and Power BI. The pipeline detects overcharged commissions, unregistered chargebacks and untraceable transactions — surfacing $100.70 in recoverable overcharges and $5,060.69 in phantom revenue still sitting in the books, out of 3,024 synthetic but realistically modeled transactions.
+
+---
+
 # Conciliador de Pasarelas de Pago
 ## Qué detecta, por qué importa y cómo actuar
 
@@ -13,23 +19,22 @@ Cuando una empresa recibe pagos con tarjeta de crédito, intervienen tres sistem
 
 El problema es que estos tres sistemas no se comunican entre sí de forma automática. El equipo contable tiene que cruzar manualmente los reportes de los tres — un proceso que con volúmenes medianos puede tomar entre 8 y 20 horas semanales y que, inevitablemente, genera errores humanos.
 
+> **Nota sobre los datos:** Este proyecto usa datos sintéticos generados con Faker. Los nombres de empresas, RUCs y transacciones son ficticios. El problema de negocio que modela — comisiones cobradas de más, chargebacks no registrados, transacciones sin trazabilidad — es completamente real y ocurre en cualquier empresa que procese pagos con tarjeta.
+
 ---
- 
+
 ## Stack tecnológico
- 
+
 | Capa | Tecnología | Uso |
 |---|---|---|
 | Procesamiento | Python · Pandas · NumPy | ETL, algoritmo de cruce, detección de novedades |
-| Almacenamiento | SQLite · SQLAlchemy | Almacenamiento de resultados con histórico por período |
-| Visualización | Power BI  | Dashboard ejecutivo · Partidas abiertas · Análisis de comisiones |
+| Almacenamiento | SQLite · SQLAlchemy | Resultados con histórico por período |
+| Visualización | Power BI | Dashboard ejecutivo · Partidas abiertas · Análisis de comisiones |
 | Generación de datos | Faker | Datos sintéticos con errores reales inyectados |
- 
-
-
 
 ---
 
-## Pipeline del Proyecto
+## Pipeline del proyecto
 
 ```mermaid
 flowchart TD
@@ -39,26 +44,26 @@ flowchart TD
         C["erp_invoices.csv\nFacturas del sistema contable"]
     end
 
-    subgraph ETL["Procesamiento ETL — src/"]
+    subgraph ETL["Procesamiento — src/"]
         D["etl.py\nLimpieza y normalización\nRetenciones SRI · Comisiones"]
         E["reconciler.py\nAlgoritmo de cruce\nClasificación de novedades"]
         F["loader.py\nCarga a base de datos\nControl de períodos"]
     end
 
-    subgraph DB["Base de datos — data/processed/"]
+    subgraph DB["Resultados — data/processed/"]
         G[("conciliador.db\nSQLite")]
-        H["reconciliation_output.csv\n3.000 transacciones clasificadas"]
+        H["reconciliation_output.csv\n3.024 transacciones clasificadas"]
         I["duplicados_gateway.csv\n60 duplicados detectados"]
     end
 
-    subgraph DASHBOARD["Dashboard  — pbi_report/"]
-        J["Reconcliador_informe.pbix\nResumen Ejecutivo · Partidas Abiertas · Análisis de Comisiones"]
+    subgraph DASHBOARD["Dashboard — pbi_report/"]
+        J["Reconciliador_Informe.pbix\nResumen Ejecutivo · Partidas Abiertas · Análisis de Comisiones"]
     end
 
     subgraph RESULTADO["Novedades detectadas"]
         K["45 comisiones cobradas de más\n$100.70 recuperables"]
-        L["24 chargebacks no registrados en ERP\n$5,060.69 en riesgo"]
-        M["30 transacciones sin confirmar en pasarela\n$12,872.18 sin trazabilidad"]
+        L["24 chargebacks no registrados\n$5,060.69 en riesgo"]
+        M["30 transacciones sin pasarela\n$12,872.18 sin trazabilidad"]
     end
 
     A --> D
@@ -76,60 +81,69 @@ flowchart TD
     J --> M
 ```
 
-
+---
 
 ## Estructura del repositorio
- 
+
 ```
-CONCILACION PASARELA/
+CONCILIACION PASARELA/
 │
 ├── Readme.md
 ├── .gitignore
-├── Consola reconciliador.JPG
 │
 ├── data/
-│   └── raw (Archivos de entrada y datos de la conciliación)
-│   ├── processed (archivo de salida con la conciliacion completa)
+│   ├── raw/                        ← archivos fuente
+│   │   ├── bank_report.csv
+│   │   ├── gateway_report.csv
+│   │   └── erp_invoices.csv
+│   └── processed/                  ← salidas del pipeline
+│       ├── reconciliation_output.csv
+│       ├── duplicados_gateway.csv
+│       └── conciliador.db
 │
 ├── src/
-│   ├── etl.py
-│   ├── loader.py
-│   └── reconciler.py
+│   ├── data_generator.py           ← genera los datos sintéticos
+│   ├── etl.py                      ← limpieza y normalización
+│   ├── reconciler.py               ← cruce y clasificación
+│   └── loader.py                   ← carga a SQLite
 │
 └── pbi_report/
     ├── Reconciliador_Informe.pbix
     └── ux_templates/
-        ├── Partidas Abiertas.png
-        ├── Resumen Ejecutivo 1.png
-        └── Resumen Ejecutivo.png
+        ├── pbi_page_1.JPG           ← Resumen Ejecutivo
+        ├── pbi_page_2.JPG           ← Partidas Abiertas
+        └── pbi_page_3.JPG           ← Análisis de Comisiones
 ```
 
+---
 
---
-## Dashboard de Power BI - Reporte de Conciliación
+## Dashboard de Power BI — Reporte de Conciliación
 
 Esta sección presenta las pantallas principales del tablero diseñado en Power BI, el cual automatiza el monitoreo y control del pipeline de conciliación.
 
 ### 1. Resumen Ejecutivo
-Vista general que consolida los principales indicadores , montos totales procesados, volumen de transacciones conciliadas y alertas tempranas sobre diferencias detectadas entre las fuentes.
 
-![Resumen Ejecutivo](images/pbi_page_1.JPG)
+Vista general que consolida los principales indicadores: montos totales procesados, volumen de transacciones conciliadas y alertas tempranas sobre diferencias detectadas entre las fuentes.
+
+![Resumen Ejecutivo](pbi_report/ux_templates/pbi_page_1.JPG)
 
 ---
 
 ### 2. Análisis de Partidas Abiertas
+
 Panel detallado para el equipo contable enfocado en la investigación de novedades. Permite identificar rápidamente transacciones duplicadas, registros huérfanos o comisiones mal calculadas por la pasarela de pagos.
 
-![Partidas Abiertas](images/pbi_page_2.JPG)
+![Partidas Abiertas](pbi_report/ux_templates/pbi_page_2.JPG)
 
 ---
 
-### 3. Analisis de Comisiones
-Montos por recuperar de comsiones cobradas de mas 
+### 3. Análisis de Comisiones
 
-![Resumen Ejecutivo 1](images/pbi_page_2.JPG)
+Montos por recuperar de comisiones cobradas de más, comparadas contra la tasa contractual de cada pasarela.
 
+![Análisis de Comisiones](pbi_report/ux_templates/pbi_page_3.JPG)
 
+---
 
 ## Cómo fluye el dinero — la base para entender las novedades
 
@@ -162,14 +176,14 @@ Este desfase entre lo que registra el ERP ($500) y lo que deposita el banco ($45
 
 ---
 
-## Las tres novedades que el script detecta
+## Las tres novedades que el sistema detecta
 
-De un total de 3.000 transacciones analizadas en el período julio-diciembre 2024, el sistema identificó 99 casos que requieren atención:
+De un total de 3.024 transacciones analizadas en el período julio-diciembre 2024 (3.000 ventas originales + 24 reversiones posteriores), el sistema identificó 99 casos que requieren atención:
 
-![Resultado Conciliador](images/Consola_reconciliador.JPG)
+![Resultado Conciliador](Consola%20reconciliador.JPG)
 
 ```
-Transacciones conciliadas correctamente  →  2.901  (96.7%)
+Transacciones conciliadas correctamente  →  2.925  (96.7%)
 Comisiones cobradas de más               →     45  casos
 Chargebacks no registrados en ERP        →     24  casos
 Transacciones sin confirmar en pasarela  →     30  casos
@@ -211,6 +225,10 @@ Un chargeback ocurre cuando un cliente disputa un cobro con su banco. El cliente
 
 Este proceso es completamente automático y unilateral — el banco no pide autorización al comercio. Simplemente revierte el depósito y lo notifica después mediante el reporte de liquidación, donde la transacción aparece con un monto negativo.
 
+**Cómo se modela en este proyecto**
+
+A diferencia de una simplificación ingenua (donde la venta original simplemente "desaparecería"), el generador de datos simula el escenario real: la venta ocurre y se factura con normalidad, y entre 15 y 45 días después llega la reversión como una transacción nueva e independiente en el reporte bancario — vinculada a la venta original mediante un identificador de referencia. Esto permite que el sistema recupere automáticamente el cliente y el monto de la factura original, exactamente como lo haría un contador al investigar el caso.
+
 **El problema**
 
 El banco revirtió 24 transacciones por un total de $5,060.69. Esas reversiones aparecen en el reporte bancario como montos negativos. Sin embargo, el ERP nunca fue actualizado — las facturas correspondientes siguen marcadas como pagadas.
@@ -223,7 +241,7 @@ Si este error no se corrige antes del cierre contable, el estado de resultados e
 
 **Cómo lo resuelve el contador**
 
-El reporte muestra cada chargeback con su fecha, pasarela y monto revertido.
+El reporte muestra cada chargeback con su fecha, cliente, pasarela y monto revertido — recuperado automáticamente desde la factura original mediante el cruce por identificador de transacción.
 
 Con esa información el contador:
 
@@ -268,19 +286,35 @@ Con el sistema ese trabajo toma menos de un minuto. El pipeline automatizado lee
 
 El impacto más concreto en el período analizado: $100.70 en comisiones recuperables que sin el sistema nadie hubiera reclamado, y $5,060.69 en ingresos ficticios que hubieran cerrado el período en los libros contables sin ser detectados.
 
+---
+
 ## Notas para producción
- 
+
 ```
 - Base de datos: SQLite para desarrollo. Cambiar a PostgreSQL modificando
   una línea en loader.py para entornos de producción.
- 
+
 - Histórico: el loader usa append con control de períodos. Ejecutar
   una vez por mes para acumular histórico en Power BI.
- 
+
 - Aging: calculado con la fecha máxima del dataset. En producción con
   datos del mes actual, cambiar a DateTime.LocalNow() en Power BI.
- 
-- client_name en chargebacks: pendiente de implementar lookup al ERP
-  por tx_id para recuperar el nombre del cliente en reversiones.
+
+- Chargebacks: se generan como reversión posterior de la venta original
+  (15-45 días después), no como modificación de la transacción existente.
+  El client_name y el monto de factura se recuperan automáticamente
+  mediante lookup por el identificador de transacción original — ya
+  implementado en reconciler.py.
+
+- Eventos posteriores al cierre: el sistema puede detectar reversiones
+  que ocurren después del corte del período que se está analizando
+  (por ejemplo, una venta de diciembre revertida en enero). Esto refleja
+  un caso contable real — subsequent events — y se recomienda que el
+  generador excluya de la muestra de chargebacks las ventas de los
+  últimos 45 días del período, para evitar reversiones fuera de rango
+  en datos sintéticos.
 ```
- *Desarrollado por Fabricio Coque · Guayaquil, Ecuador*
+
+---
+
+*Desarrollado por Fabricio Coque · Guayaquil, Ecuador*

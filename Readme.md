@@ -123,15 +123,6 @@ Informe que consolida los principales indicadores: montos totales procesados, vo
 ![Resumen Ejecutivo](images/Informe_Conciliacion.JPG)
 
 
-
-### 3. Análisis de Comisiones
-
-Montos por recuperar de comisiones cobradas de más, comparadas contra la tasa contractual de cada pasarela.
-
-![Análisis de Comisiones](images/pbi_page_2.JPG))
-
----
-
 ## Cómo fluye el dinero — la base para entender las novedades
 
 Antes de explicar los errores que el sistema detecta, es importante entender cómo fluye el dinero en cada transacción con tarjeta.

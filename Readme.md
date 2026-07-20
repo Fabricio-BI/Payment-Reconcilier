@@ -114,24 +114,15 @@ CONCILIACION PASARELA/
 
 ## Dashboard de Power BI — Reporte de Conciliación
 
-Esta sección presenta las pantallas principales del tablero diseñado en Power BI, el cual automatiza el monitoreo y control del pipeline de conciliación.
+Esta sección presenta las pantalla principal del tablero diseñado en Power BI, el cual automatiza el monitoreo y control del pipeline de conciliación.
 
-### 1. Resumen Ejecutivo
+### Informe Conciliacion 
 
-Vista general que consolida los principales indicadores: montos totales procesados, volumen de transacciones conciliadas y alertas tempranas sobre diferencias detectadas entre las fuentes.
+Informe que consolida los principales indicadores: montos totales procesados, volumen de transacciones conciliadas y alertas tempranas sobre diferencias detectadas entre las fuentes.Inlcuye tablas con detalles  para el equipo contable enfocado en la investigación de novedades. Permite identificar rápidamente transacciones duplicadas, registros huérfanos o comisiones mal calculadas por la pasarela de pagos.
 
-![Resumen Ejecutivo](images/pbi_page_1.JPG)
+![Resumen Ejecutivo](images/Informe_Conciliacion.JPG)
 
 
----
-
-### 2. Análisis de Partidas Abiertas
-
-Panel detallado para el equipo contable enfocado en la investigación de novedades. Permite identificar rápidamente transacciones duplicadas, registros huérfanos o comisiones mal calculadas por la pasarela de pagos.
-
-![Partidas Abiertas](images/pbi_page_2.JPG)
-
----
 
 ### 3. Análisis de Comisiones
 

@@ -54,7 +54,7 @@ def cruzar_banco_erp(bank: pd.DataFrame, erp: pd.DataFrame) -> pd.DataFrame:
     df["monto_bruto_erp"] = df["monto_bruto_erp"].fillna(df["monto_bruto_erp_original"])
 
     df = df.drop(columns=["client_name_original", "monto_bruto_erp_original"])
-    # ───────────────────────────────────────────────────────────────────────
+    
 
     # Comparación de flujos netos para evaluar descuadres iniciales
     df["diff_banco_erp"] = (
@@ -66,7 +66,7 @@ def cruzar_banco_erp(bank: pd.DataFrame, erp: pd.DataFrame) -> pd.DataFrame:
 
 
 def agregar_gateway(df: pd.DataFrame, gateway: pd.DataFrame) -> pd.DataFrame:
-    log.info("Agregando pasarela al cruce...")
+    log.info("Agregando pasarela al cruce")
 
     # Se aíslan registros únicos de pasarela; duplicados van por canal operativo separado
     gw_unique = gateway[gateway["es_duplicado"] == 0][[
@@ -87,7 +87,7 @@ def agregar_gateway(df: pd.DataFrame, gateway: pd.DataFrame) -> pd.DataFrame:
 
 
 def clasificar_transacciones(df: pd.DataFrame) -> pd.DataFrame:
-    log.info("Clasificando transacciones...")
+    log.info("Clasificando transacciones")
 
     # Máscaras booleanas para la asignación de estados de concilacion 
     mask_conciliada = (
@@ -202,9 +202,8 @@ def imprimir_resumen(df: pd.DataFrame, duplicados: pd.DataFrame):
     monto_riesgo = df["monto_en_riesgo"].sum()
     monto_diff   = df.loc[df["estado_conciliacion"] == "CON_DIFERENCIA", "diff_banco_erp"].abs().sum()
 
-    print("\n" + "="*50)
+    print()
     print("RESUMEN EJECUTIVO DE CONCILIACIÓN")
-    print("="*50)
     print(f"Total transacciones analizadas : {total}")
     print(f"CONCILIADAS                 : {conciliadas} ({tasa:.1f}%)")
     print(f"CON DIFERENCIA              : {con_diff}")
@@ -219,14 +218,15 @@ def imprimir_resumen(df: pd.DataFrame, duplicados: pd.DataFrame):
         if pd.notna(tipo):
             monto = df.loc[df["tipo_diferencia"] == tipo, "monto_en_riesgo"].sum()
             print(f"  {tipo}: {cnt} casos ($ {monto:,.2f})")
-
+    
+    print()
     print("\nDetalle por pasarela:")
     for gw in df["gateway"].dropna().unique():
         mask = df["gateway"] == gw
         conc = (df.loc[mask, "estado_conciliacion"] == "CONCILIADA").sum()
         tot  = mask.sum()
         print(f"  {gw}: {conc}/{tot} conciliadas ({conc/tot*100:.1f}%)" if tot > 0 else "")
-    print("="*50)
+    
 
 
 def run_reconciler():

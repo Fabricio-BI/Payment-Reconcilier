@@ -202,13 +202,13 @@ def run_etl(data_dir=DATA_DIR):
      
     
     
-    log.info("═══ INICIANDO ETL ═══")
+    log.info("INICIANDO ETL ")
     
     bank    = load_bank_report(os.path.join(data_dir, "bank_report.csv"))
     gateway = load_gateway_report(os.path.join(data_dir, "gateway_report.csv"))
     erp     = load_erp_report(os.path.join(data_dir, "erp_invoices.csv"))
     
-    log.info("═══ ETL COMPLETADO ═══")
+    log.info("ETL COMPLETADO  ")
     
     return bank, gateway, erp
 

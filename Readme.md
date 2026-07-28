@@ -38,29 +38,29 @@ flowchart TD
         B["gateway_report.csv\nDatafast · Medianet · PayPhone"]
         C["erp_invoices.csv\nFacturas del sistema contable"]
     end
-
+ 
     subgraph ETL["Procesamiento — src/"]
         D["etl.py\nLimpieza y normalización\nRetenciones SRI · Comisiones"]
         E["reconciler.py\nAlgoritmo de cruce\nClasificación de novedades"]
         F["loader.py\nCarga a base de datos\nControl de períodos"]
     end
-
+ 
     subgraph DB["Resultados — data/processed/"]
-        G[("conciliador.db\nSQLite")]
+        G[("conciliador.db")]
         H["reconciliation_output.csv\n3.024 transacciones clasificadas"]
         I["duplicados_gateway.csv\n60 duplicados detectados"]
     end
-
+ 
     subgraph DASHBOARD["Dashboard — pbi_report/"]
         J["Reconciliador_Informe.pbix\nResumen Ejecutivo · Partidas Abiertas · Análisis de Comisiones"]
     end
-
+ 
     subgraph RESULTADO["Novedades detectadas"]
         K["45 comisiones cobradas de más\n$100.70 recuperables"]
         L["24 chargebacks no registrados\n$5,060.69 en riesgo"]
         M["30 transacciones sin pasarela\n$12,872.18 sin trazabilidad"]
     end
-
+ 
     A --> D
     B --> D
     C --> D
@@ -75,7 +75,7 @@ flowchart TD
     J --> L
     J --> M
 ```
-
+ 
 ---
 
 ## Estructura del repositorio
@@ -109,8 +109,35 @@ CONCILIACION PASARELA/
         ├── pbi_page_2.JPG           ← Partidas Abiertas
         └── pbi_page_3.JPG           ← Análisis de Comisiones
 ```
+## Ejecución
+ 
+El pipeline está pensado para que lo opere directamente el responsable de conciliación, sin necesidad de conocimientos de programación ni de un editor de código. Una vez configurado el entorno una única vez, el proceso semanal se reduce a reemplazar los archivos fuente y hacer doble clic.
+ 
+**Configuración inicial (una sola vez)**
+ 
+```cmd
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+```
+ 
+**Ejecución semanal**
+ 
+1. Reemplazar los tres archivos fuente en `data/raw/` con los reportes actualizados del banco, la pasarela y el ERP.
+2. Ejecutar `ejecutar_conciliacion.bat` con doble clic.
+3. Abrir el dashboard en Power BI y presionar **Actualizar**.
+```bat
+@echo off
+cd /d "RUTA_DEL_PROYECTO"
+call .venv\Scripts\activate
+python src\reconciler.py
+python src\loader.py
+echo Proceso completado. Abre el .pbix y presiona Actualizar.
+pause
+```
+ 
+El script activa el entorno virtual, corre el reconciliador y carga los resultados a la base de datos en un solo paso. No requiere terminal, ni comandos, ni supervisión técnica — está diseñado para el contexto real de una PYME sin departamento de TI, donde el analista contable es quien opera el sistema directamente.
 
----
 
 ## Dashboard de Power BI — Reporte de Conciliación
 
